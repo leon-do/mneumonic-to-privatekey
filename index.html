@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mneumonic to Private Key</title>
+    <style>
+      * {
+        font-family: monospace;
+      }
+    </style>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"
+      integrity="sha512-FDcVY+g7vc5CXANbrTSg1K5qLyriCsGDYCE02Li1tXEYdNQPvLPHNE+rT2Mjei8N7fZbe0WLhw27j2SrGRpdMg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <div>
+      <input
+        type="text"
+        id="privateKey"
+        placeholder="privateKey"
+        value="0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      />
+      <button onclick="fromPrivateKey()">privateKey</button>
+    </div>
+
+    <div>
+      <input
+        type="text"
+        id="mnemonic"
+        placeholder="mnemonic"
+        value="critic maid together reflect thought cruise breeze smoke mansion easy divert kiss clay grass cry"
+      />
+      <button onclick="fromMnemonic()">mnemonic</button>
+    </div>
+
+    <pre id="json"></pre>
+  </body>
+</html>
+
+<script>
+  function fromPrivateKey() {
+    const privateKey = document.getElementById("privateKey").value;
+    const address = ethers.utils.computeAddress(privateKey);
+    console.log(address);
+
+    document.getElementById("json").innerHTML = JSON.stringify(
+      { privateKey, address },
+      null,
+      2
+    );
+  }
+
+  function fromMnemonic() {
+    const mnemonic = document.getElementById("mnemonic").value;
+    const path = "m/44'/60'/0'/0/0";
+
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic, path);
+    const privateKey = wallet.privateKey;
+    console.log(privateKey);
+
+    const address = ethers.utils.computeAddress(privateKey);
+    console.log(address);
+
+    document.getElementById("json").innerHTML = JSON.stringify(
+      { mnemonic, path, privateKey, address },
+      null,
+      2
+    );
+  }
+</script>
